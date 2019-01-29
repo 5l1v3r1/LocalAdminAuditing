@@ -9,12 +9,14 @@ $strADQueryPath = "D:\sampled_computers_localusers_ADQuery.csv" # Path for AD qu
 <# General Variables -Don't change #>
 $Computers = Get-Content $strContent
 $Properties = @('SamAccountName', 'DisplayName', 'Enabled', 'Company', 'physicalDeliveryOfficeName', 'title', 'manager', 'Created')
+$adminlist    = @() 
+$adminlist2   = @() 
+$resultsarray = @()
 <# General Variables -Don't change #>
 
 foreach ($comp in $Computers) <# Iterating over sampled computer accounts for retrieving members of those computers' Administrators group #> {
         
-        $adminlist    = @() 
-        $adminlist2   = @() 
+        
         $computer     = [ADSI]("WinNT://" + $comp + ",computer") 
         $AdminGroup   = $computer.psbase.children.find("Administrators")
         $Adminmembers = $AdminGroup.psbase.invoke("Members") | %{$_.GetType().InvokeMember("Name", 'GetProperty', $null, $_, $null)} 
